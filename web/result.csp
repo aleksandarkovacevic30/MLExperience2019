@@ -1,0 +1,13 @@
+<html>
+<body>
+<script language="Cache" runat="SERVER">
+   // test for a submit button
+   If $Data(^lastImage) {
+		WRITE "<img src='"_$get(^lastImage)_"'/>"
+      }
+      Else {
+        Write "<div class='error'>Image will show last generated image</div>"
+      }
+</script>
+</body>
+</html>
