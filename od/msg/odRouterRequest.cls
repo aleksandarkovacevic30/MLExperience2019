@@ -2,12 +2,14 @@ Class od.msg.odRouterRequest Extends Ens.Request
 {
 
 Property Apples As %Integer;
+
 Property Bananas As %Integer;
+
 Property Oranges As %Integer;
+
 Property Other As %String;
+
 Property Image As %String;
-
-
 
 Storage Default
 {
@@ -24,6 +26,9 @@ Storage Default
 </Value>
 <Value name="4">
 <Value>Other</Value>
+</Value>
+<Value name="5">
+<Value>Image</Value>
 </Value>
 </Data>
 <DefaultData>odRouterRequestDefaultData</DefaultData>

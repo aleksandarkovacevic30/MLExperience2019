@@ -1,4 +1,4 @@
-Class od.msg.ImageODRequest Extends Ens.Request
+Class od.msg.FruitShelfUpdateRequest Extends Ens.Request
 {
 
 Property Filename As %String;

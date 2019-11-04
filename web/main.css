@@ -8,6 +8,11 @@ body {
 	text-shadow: 1px 1px #aaa;
 }
 
+a .boxlink {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
 .handout {
   text-align:center;
   height:80px;

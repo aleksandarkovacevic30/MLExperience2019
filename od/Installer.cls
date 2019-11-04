@@ -48,12 +48,10 @@ XData Install [ XMLNamespace = INSTALLER ]
 </Manifest>
 }
 
-
 ClassMethod Setup(ByRef pVars, pLogLevel As %Integer = 3, pInstaller As %Installer.Installer, pLogger As %Installer.AbstractLogger) As %Status [ CodeMode = objectgenerator, Internal ]
 {
   Quit ##class(%Installer.Manifest).%Generate(%compiledclass, %code, "Install")
 }
-
 
 /// Set production as default. 
 /// Load test data
@@ -161,17 +159,13 @@ ClassMethod EnableAnalytics(pCSPName As %String, url As %String) As %Status
   set props("DeepSeeEnabled")=1
   do ##class(Security.Applications).Modify(pCSPName,.props)
   quit $$$OK
- }
+}
 
 ClassMethod AddWorkflowRules() As %Status
 {
     do ##class(EnsLib.Workflow.UserDefinition).CreateUser("SuperUser","SU Account")
 	do ##class(EnsLib.Workflow.RoleDefinition).CreateRole("OrderTeam")
 	do ##class(EnsLib.Workflow.RoleDefinition).AddUserToRole("OrderTeam","SuperUser")
- }
-
-   
- 
-
+}
 
 }

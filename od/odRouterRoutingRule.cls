@@ -6,7 +6,7 @@ Parameter RuleAssistClass = "EnsLib.MsgRouter.RuleAssist";
 
 XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 {
-<ruleDefinition alias="" context="EnsLib.MsgRouter.RoutingEngine" production="isc.py.test.Production">
+<ruleDefinition alias="" context="EnsLib.MsgRouter.RoutingEngine" production="od.Production">
 <variable name="Bananas"></variable>
 <variable name="Apples"></variable>
 <variable name="Oranges"></variable>
@@ -18,13 +18,13 @@ XData RuleDefinition [ XMLNamespace = "http://www.intersystems.com/rule" ]
 <assign property="@Mouse" value="CalculateShelfStatus(&quot;MOUSE&quot;,&quot;&quot;)"></assign>
 <rule name="" disabled="false">
 <when condition="@Mouse&gt;0">
-<send transform="" target="od.EscalatedodWorkflow"></send>
+<send transform="" target="od.BP.EscalatedodWorkflow"></send>
 <return></return>
 </when>
 </rule>
 <rule name="" disabled="false">
 <when condition="((@Bananas&lt;3)||(@Oranges&lt;3)||(@Apples&lt;3))&amp;&amp;(@Mouse=0)">
-<send transform="" target="od.NormalodWorkflow"></send>
+<send transform="" target="od.BP.NormalodWorkflow"></send>
 <return></return>
 </when>
 </rule>

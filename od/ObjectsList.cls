@@ -1,7 +1,8 @@
-Class od.ObjectsList Extends (%Persistent,%JSON.Adaptor)
+Class od.ObjectsList Extends (%Persistent, %JSON.Adaptor)
 {
-	Property objects As List of od.Objects;
-	
+
+Property objects As list Of od.Objects;
+
 Storage Default
 {
 <Data name="ObjectsListDefaultData">

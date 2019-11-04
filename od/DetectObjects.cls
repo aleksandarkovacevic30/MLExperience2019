@@ -10,7 +10,7 @@ Storage Default
 /// BPL Definition
 XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 {
-<process language='objectscript' request='od.msg.ImageODRequest' response='Ens.Response' height='2000' width='2000' >
+<process language='objectscript' request='od.msg.ImageODRequest' response='od.msg.ImageODResponse' height='2000' width='2000' >
 <context>
 <property name='ObjectsAsString' type='%String' instantiate='0' >
 <parameters>
@@ -34,15 +34,16 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 </parameters>
 </property>
 </context>
-<sequence xend='200' yend='1150' >
-<call name='Send Value To Python' target='isc.py.ens.Operation' async='0' timeout='3000' xpos='200' ypos='250' >
+<sequence xend='200' yend='1050' >
+<call name='Send Value To Python' target='od.BO.PythonGateway' async='1' xpos='200' ypos='250' >
 <request type='isc.py.msg.ExecutionRequest' >
 <assign property="callrequest.Code" value="&quot;sample_image_path = r'&quot;_request.Filepath_&quot;/&quot;_request.Filename_&quot;'&quot;" action="set" />
 <assign property="callrequest.Variables" value="&quot;sample_image_path&quot;" action="set" />
 </request>
 <response type='Ens.Response' />
 </call>
-<call name='Import Python Libraries' target='isc.py.ens.Operation' async='0' timeout='3000' xpos='200' ypos='350' >
+<sync calls='Send Value To Python' type='all' xpos='200' ypos='350' />
+<call name='Detect Objects' target='od.BO.PythonGateway' async='1' xpos='200' ypos='450' >
 <annotation><![CDATA[import os
 from pprint import pprint
 from six import BytesIO
@@ -63,14 +64,8 @@ tf.autograph.set_verbosity(2)
 sys.path.append(r'/home/irisuser/pycode')
 import od_utils
 import od_detectf
-]]></annotation>
-<request type='isc.py.msg.ExecutionRequest' >
-<assign property="callrequest.Code" value="process.GetAnnotation(&quot;Import Python Libraries&quot;)" action="set" />
-</request>
-<response type='Ens.Response' />
-</call>
-<call name='Detect Objects' target='isc.py.ens.Operation' async='0' timeout='300000' xpos='200' ypos='450' >
-<annotation><![CDATA[resultOut = od_detectf.detect_image(sample_image_path)
+
+resultOut = od_detectf.detect_image(sample_image_path)
 result=resultOut['result']
 image_out=resultOut['image']
 ]]></annotation>
@@ -80,7 +75,8 @@ image_out=resultOut['image']
 </request>
 <response type='Ens.Response' />
 </call>
-<call name='Prepare Results' target='isc.py.ens.Operation' async='0' timeout='300000' xpos='200' ypos='550' >
+<sync calls='Detect Objects' type='all' xpos='200' ypos='550' />
+<call name='Prepare Results' target='od.BO.PythonGateway' async='1' xpos='200' ypos='650' >
 <annotation><![CDATA[resultDF=pd.DataFrame(od_utils.TFtoPANDAS(result))
 resultDF=resultDF.loc[resultDF.reset_index().groupby(['objectID'])['Score'].idxmax()]
 resultDF=resultDF[resultDF['Class']!=b'Shelf']
@@ -91,26 +87,11 @@ exportableDF='{"objects":'+exportableDF+'}']]></annotation>
 <assign property="callrequest.Variables" value="&quot;exportableDF&quot;" action="set" />
 </request>
 <response type='isc.py.msg.ExecutionResponse' >
-<assign property="context.ObjectsAsString" value="callresponse.Variables.GetAt(&quot;exportableDF&quot;)" action="set" />
+<assign property="response.JSONResponse" value="callresponse.Variables.GetAt(&quot;exportableDF&quot;)" action="set" />
 </response>
 </call>
-<code name='Store Data Into IRIS' xpos='200' ypos='650' >
-<![CDATA[
-  set ol=##class(od.ObjectsList).%New()
-  s sc = ol.%JSONImport(context.ObjectsAsString)
-  do ol.%Save()]]>
-</code>
-<code name='Calculate Shelf Status' xpos='200' ypos='750' >
-<![CDATA[
-  SET myquery = "SELECT Class, COUNT(*) As cnt FROM od.Objects Where Timestamp = (Select MAX(Timestamp) from od.Objects) group by Class"
-  SET tStatement = ##class(%SQL.Statement).%New()
-  SET qStatus = tStatement.%Prepare(myquery)
-  IF qStatus'=1 {WRITE "%Prepare failed:" DO $System.Status.DisplayError(qStatus) QUIT}
-  SET rset = tStatement.%Execute()
-  WHILE rset.%Next() { set sc=context.status.SetAt(rset.cnt, rset.Class) }
-]]>
-</code>
-<call name='Annotate Image' target='isc.py.ens.Operation' async='0' timeout='300000' xpos='200' ypos='850' >
+<sync calls='Prepare Results' type='all' xpos='200' ypos='750' />
+<call name='Annotate Image' target='od.BO.PythonGateway' async='1' xpos='200' ypos='850' >
 <annotation><![CDATA[image_with_boxes = od_utils.draw_boxes(np.array(image_out), resultDF[['Ymin','Xmin','Ymax','Xmax']].to_numpy(),resultDF['Class'].to_numpy(), resultDF['Score'].to_numpy(), max_boxes=100, min_score=0.2)
 im = Image.fromarray(image_with_boxes)
 import random
@@ -120,24 +101,11 @@ im.save("/usr/irissys/csp/python/result"+str(ran)+".jpg")]]></annotation>
 <assign property="callrequest.Code" value="process.GetAnnotation(&quot;Annotate Image&quot;)" action="set" />
 <assign property="callrequest.Variables" value="&quot;ran&quot;" action="set" />
 </request>
-<response type='Ens.Response' >
-<assign property="context.resultName" value="&quot;result&quot;_callresponse.Variables.GetAt(&quot;ran&quot;)_&quot;.jpg&quot;" action="set" />
+<response type='isc.py.msg.ExecutionResponse' >
+<assign property="response.resultFile" value="&quot;result&quot;_callresponse.Variables.GetAt(&quot;ran&quot;)_&quot;.jpg&quot;" action="set" />
 </response>
 </call>
-<code name="Store New Image Path" xpos='200' ypos='950' >
-<![CDATA[
-  set ^lastImage=context.resultName]]>
-</code>
-<call name='Order Routing' target='odRouter' async='1' xpos='200' ypos='1050' >
-<request type='od.msg.odRouterRequest' >
-<assign property="callrequest.Apples" value="context.status.GetAt(&quot;APPLE&quot;)" action="set" />
-<assign property="callrequest.Bananas" value="context.status.GetAt(&quot;BANANA&quot;)" action="set" />
-<assign property="callrequest.Oranges" value="context.status.GetAt(&quot;ORANGE&quot;)" action="set" />
-<assign property="callrequest.Other" value="context.status.GetAt(&quot;MOUSE&quot;)" action="set" />
-<assign property="callrequest.Image" value="context.resultName" action="set" />
-</request>
-<response type='Ens.Response' />
-</call>
+<sync calls='Annotate Image' type='all' xpos='200' ypos='950' />
 </sequence>
 </process>
 }

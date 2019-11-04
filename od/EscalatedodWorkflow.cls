@@ -22,7 +22,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <sequence xend='200' yend='350' >
 <while name='while' condition='context.Resolved=0' xpos='200' ypos='250' xend='200' yend='800' >
 <annotation>Notify the od Respondant</annotation>
-<call name='Notify Respondant' target='Order Team' async='1' xpos='200' ypos='250' >
+<call name='Notify Respondant' target='od.BO.OrderTeam' async='1' xpos='200' ypos='250' >
 <annotation><![CDATA[Send the problem report to the od respondant.]]></annotation>
 <request type='EnsLib.Workflow.TaskRequest' >
 <assign property="callrequest.%Actions" value="&quot;Submit Feedback,Deny od,Accept od&quot;" action="set" />

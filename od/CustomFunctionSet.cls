@@ -28,8 +28,4 @@ ClassMethod CalculateShelfStatus(pItem As %String = "", Output pStatus As %Statu
 	Quit tItem
 }
 
-
-
-
-
 }
