@@ -14,15 +14,13 @@ XData Install [ XMLNamespace = INSTALLER ]
     <Import File="${SOURCESPATH}od" Recurse="1"/>
     <Import File="/usr/irissys/csp/python/index.csp"/>
     <Import File="/usr/irissys/csp/python/camera.csp"/>
+    <Import File="/usr/irissys/csp/python/result.csp"/>    
     <Import File="/usr/irissys/csp/python/WorkFlowForm.csp"/>
     <Import File="/usr/irissys/csp/python/EscalatedWorkFlowForm.csp"/>
 
 
 	<CSPApplication Url="/csp/${Namespace}" Directory="${CSPDIR}${Namespace}" AutoCompile="1" />
-    
-    <Log Level="1" Text="Configuring Production"/>
-    <Invoke Class="od.Installer" Method="ConfigureProduction" CheckStatus="true"/>
- 
+     
     <Log Level="1" Text="Configuring BPL Editor"/>
     <Invoke Class="od.Installer" Method="PatchBP" CheckStatus="true"/>
         
@@ -51,29 +49,6 @@ XData Install [ XMLNamespace = INSTALLER ]
 ClassMethod Setup(ByRef pVars, pLogLevel As %Integer = 3, pInstaller As %Installer.Installer, pLogger As %Installer.AbstractLogger) As %Status [ CodeMode = objectgenerator, Internal ]
 {
   Quit ##class(%Installer.Manifest).%Generate(%compiledclass, %code, "Install")
-}
-
-/// Set production as default. 
-/// Load test data
-/// Set libpython3.6m.so as PythonLib
-ClassMethod ConfigureProduction() As %Status
-{
-	set production = "od.Production"
-	set ^Ens.Configuration("csp","LastProduction") = production
-	
-	set setting = ##class(Ens.Config.Setting).%New()
-	set setting.Name = "PythonLib"
-	set setting.Target = "Host"
-	set setting.Value = "libpython3.6m.so"
-
-	set exists = ##class(Ens.Config.Item).NameExists(production, "isc.py.ens.Operation", .itemId)
-	set item =  ##class(Ens.Config.Item).%OpenId(itemId)
-	do item.Settings.Insert(setting)
-	set sc = item.%Save()
-	quit:$$$ISERR(sc) sc
-	
-		
-	quit sc
 }
 
 /// Enable OS Authentication

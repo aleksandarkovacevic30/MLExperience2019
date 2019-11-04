@@ -13,6 +13,12 @@ a .boxlink {
   margin-bottom:10px;
 }
 
+div.inline a {
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+
 .handout {
   text-align:center;
   height:80px;
