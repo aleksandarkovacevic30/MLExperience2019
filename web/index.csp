@@ -18,7 +18,7 @@
   	 <div class="containersmall"><img src="arrow.svg"/></div>  	
   	 <a class="boxlink" href="EnsPortal.ProductionConfig.zen?$NAMESPACE=PYTHON&IRISUserName=SuperUser&IRISPassword=SYS" target="_blank"><div id="interoperability" class="containerbig"><h2>Interoperability</h2><img src="interoperability.png"/></div></a>
   	 <div class="containersmall"><img src="arrow.svg"/></div>
-  	 <a class="boxlink" href="EnsPortal.BPLEditor.zen?NAMESPACE=PYTHON&BP=od.DetectObjects.bpl&IRISUserName=SuperUser&IRISPassword=SYS" target="_blank"><div id="objectdetection" class="containerbig"><h2>Recognize objects</h2><img src="TensorFlowLogo.svg"/><img src="Python_logo.svg"/></div></a>
+  	 <a class="boxlink" href="EnsPortal.BPLEditor.zen?NAMESPACE=PYTHON&BP=od.FruitOrderProcess.bpl&IRISUserName=SuperUser&IRISPassword=SYS" target="_blank"><div id="objectdetection" class="containerbig"><h2>Recognize objects</h2><img src="TensorFlowLogo.svg"/><img src="Python_logo.svg"/></div></a>
      <div class="containersmall"><img src="arrow.svg"/></div>
       <a class="boxlink" href="result.csp" target="_blank"><div id="objectdetection" class="containerbig"><h2>Show<br/>Annotated<br/>Image</h2></div></a>
       <div class="containersmall"><img src="arrow.svg"/></div>
