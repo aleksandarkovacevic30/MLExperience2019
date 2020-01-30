@@ -5,6 +5,8 @@ Class od.Installer
 XData Install [ XMLNamespace = INSTALLER ]
 {
 <Manifest>
+  <Var Name="pwd" Value="SYS"/> 
+  <User Username="SuperUser" ChangePassword="0" PasswordVar="pwd" Roles="%All" Enabled="1"/>
   <Default Name="NAMESPACE" Value="PYTHON"/>
   <Default Name="DBNAME" Value="${NAMESPACE}"/>
   <Default Name="SOURCESPATH" Dir='#{$system.Util.GetEnviron("SRC_DIR")}' />
