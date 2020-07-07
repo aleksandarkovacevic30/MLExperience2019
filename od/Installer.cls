@@ -140,8 +140,8 @@ ClassMethod EnableAnalytics(pCSPName As %String, url As %String) As %Status
 
 ClassMethod AddWorkflowRules() As %Status
 {
-    do ##class(EnsLib.Workflow.UserDefinition).CreateUser("SuperUser","SU Account")
-	do ##class(EnsLib.Workflow.RoleDefinition).CreateRole("OrderTeam")
+  do ##class(EnsLib.Workflow.UserDefinition).CreateUser("SuperUser","SU Account") 
+  do ##class(EnsLib.Workflow.RoleDefinition).CreateRole("OrderTeam")
 	do ##class(EnsLib.Workflow.RoleDefinition).AddUserToRole("OrderTeam","SuperUser")
 }
 

@@ -1,7 +1,6 @@
 ARG IMAGE=intersystemscommunity/irispy:latest
 FROM ${IMAGE}
 
-
 USER root
 
 RUN pip install pandas matplotlib seaborn numpy dill Pillow "tensorflow>=2.0.0" tensorflow-hub tqdm

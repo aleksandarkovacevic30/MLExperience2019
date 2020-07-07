@@ -13,9 +13,10 @@
 	</style>
 	</head>
   <body>
-There is a mouse!
+<div class="message">A new model has been built. Please review it.</div>
+<h1>Explainability Report for Model M1A12</h1>
 <div class="container">
-  <img src='#(%task.%FormValues.GetAt("image"))#'/>
+  <img src='expRep.png'/>
 </div>
   </body>
 </html>
